@@ -1,6 +1,6 @@
 /*
  * ╔══════════════════════════════════════════════════════════╗
- *   SISTEM ABSENSI ESP32  v2.0
+ *   SISTEM ABSENSI ESP32 
  *   ESP32 + RFID RC522 + OLED SH1106 1.3" + Buzzer
  * ╚══════════════════════════════════════════════════════════╝
  *
@@ -126,7 +126,6 @@ int       deleteTarget = -1;
 LogEntry  logs[MAX_LOG];
 int       logCount     = 0;
 
-// Tombol
 bool          btnLPrev      = HIGH, btnRPrev = HIGH;
 unsigned long btnLTime      = 0,    btnRTime = 0;
 unsigned long btnLDown      = 0;
@@ -136,7 +135,6 @@ bool          btnLPressed   = false;
 bool          btnLHeld      = false;
 bool          btnRPressed   = false;
 
-// Animasi & timing
 int           dotStep    = 0;
 unsigned long lastFrame  = 0;
 unsigned long lastAction = 0;
@@ -152,7 +150,6 @@ void beepDelete() { tone(BUZZER_PIN,600,90);   delay(120); tone(BUZZER_PIN,370,1
 void beepBoot()   { tone(BUZZER_PIN,800,70);   delay(90);  tone(BUZZER_PIN,1100,70); delay(90); tone(BUZZER_PIN,1500,130); }
 
 // ┌──────────────────────────────────────────────────────┐
-//   LITTLEFS — SIMPAN & MUAT USER
 //   Format /users.json:
 //   {"count":2,"users":[
 //     {"uid":"AA:BB:CC:DD","name":"Budi"},
@@ -160,9 +157,7 @@ void beepBoot()   { tone(BUZZER_PIN,800,70);   delay(90);  tone(BUZZER_PIN,1100,
 //   ]}
 // └──────────────────────────────────────────────────────┘
 void saveUsers() {
-  // Gunakan JsonDocument ukuran cukup untuk 50 user
-  // Setiap user: uid (14 char) + name (20 char) + overhead ~30 = ~64 bytes
-  // 50 user * 64 + overhead 128 = ~3328, pakai 4096
+
   JsonDocument doc;
   doc["count"] = userCount;
   JsonArray arr = doc["users"].to<JsonArray>();
@@ -209,10 +204,10 @@ void loadUsers() {
   int idx = 0;
   for (JsonObject obj : arr) {
     if (idx >= MAX_USERS) break;
-    // Parse UID dari string "AA:BB:CC:DD"
+
     const char* uidStr = obj["uid"] | "";
     strToUid(uidStr, users[idx].uid);
-    // Nama
+
     const char* nm = obj["name"] | "Unknown";
     strncpy(users[idx].name, nm, NAME_SIZE-1);
     users[idx].name[NAME_SIZE-1] = '\0';
@@ -236,7 +231,6 @@ String uidToStr(byte* uid, byte size) {
   return s;
 }
 
-// Parse "AA:BB:CC:DD" → byte array
 void strToUid(const char* str, byte* uid) {
   for (int i = 0; i < UID_SIZE; i++) {
     uid[i] = 0;
@@ -610,10 +604,9 @@ void handleApiRename() {
   }
   strncpy(users[idx].name, nm.c_str(), NAME_SIZE-1);
   users[idx].name[NAME_SIZE-1] = '\0';
-  saveUsers();   // simpan ke LittleFS
+  saveUsers();
   server.send(200, "application/json", "{\"ok\":true}");
 
-  // Broadcast update ke semua WS client
   String msg = "{\"type\":\"userchange\",\"msg\":\"Nama diperbarui\","
                "\"count\":" + String(userCount) + ",\"users\":[";
   for (int i = 0; i < userCount; i++) {
@@ -658,7 +651,6 @@ void handleApiLogsCsv() {
   server.send(200, "text/csv", csv);
 }
 
-// ── Debug: lihat isi LittleFS via serial ──────────────
 void handleApiDebugFs() {
   String out = "LittleFS Files:\n";
   File root = LittleFS.open("/");
@@ -667,7 +659,6 @@ void handleApiDebugFs() {
     out += "  " + String(file.name()) + "  (" + String(file.size()) + " bytes)\n";
     file = root.openNextFile();
   }
-  // Baca isi users.json
   if (LittleFS.exists(USERS_FILE)) {
     File f = LittleFS.open(USERS_FILE, "r");
     out += "\nusers.json:\n" + f.readString();
@@ -682,7 +673,6 @@ void setupNetwork() {
   delay(100);
   Serial.printf("[WiFi] AP IP: %s\n", WiFi.softAPIP().toString().c_str());
 
-  // DNS wildcard — semua domain → IP ESP32
   dns.start(DNS_PORT, "*", WiFi.softAPIP());
 
   server.on("/",             HTTP_GET,  handleRoot);
@@ -691,7 +681,7 @@ void setupNetwork() {
   server.on("/api/rename",   HTTP_POST, handleApiRename);
   server.on("/api/delete",   HTTP_POST, handleApiDelete);
   server.on("/api/logs/csv", HTTP_GET,  handleApiLogsCsv);
-  server.on("/api/debug/fs", HTTP_GET,  handleApiDebugFs);  // debug endpoint
+  server.on("/api/debug/fs", HTTP_GET,  handleApiDebugFs);
   // Captive portal endpoints
   server.on("/generate_204",              HTTP_GET, handleCaptivePortal);
   server.on("/gen_204",                   HTTP_GET, handleCaptivePortal);
@@ -720,7 +710,7 @@ void setup() {
   digitalWrite(BUZZER_PIN, LOW);
 
   // ── LittleFS init ──────────────────────────────────────
-  if (!LittleFS.begin(true)) {  // true = format jika gagal mount
+  if (!LittleFS.begin(true)) {
     Serial.println("[FS] LittleFS mount GAGAL!");
   } else {
     Serial.println("[FS] LittleFS OK");
@@ -875,7 +865,6 @@ void loop() {
 
   unsigned long now = millis();
 
-  // Refresh attend screen tiap 1 detik
   static unsigned long idleRef = 0;
   if (currentMode == MODE_ATTEND && now - idleRef > 1000) {
     idleRef = now;
@@ -883,7 +872,6 @@ void loop() {
     wsBroadcastStatus();
   }
 
-  // Animasi dot admin scan
   if ((currentMode == MODE_ADMIN_REGISTER || currentMode == MODE_ADMIN_DELETE) &&
        now - lastFrame > 380) {
     lastFrame = now; dotStep = (dotStep+1) % 3;
@@ -891,7 +879,6 @@ void loop() {
     else                                    displayAdminScan("  HAPUS KARTU  ");
   }
 
-  // Progress bar attend OK
   static unsigned long attendOKStart = 0;
   if (currentMode == MODE_ATTEND_OK) {
     static unsigned long lastBar = 0;
@@ -899,7 +886,6 @@ void loop() {
     if (now - attendOKStart > RESULT_TIMEOUT) goTo(MODE_ATTEND);
   }
 
-  // Timeout
   if (currentMode == MODE_ATTEND_FAIL && now - lastAction > RESULT_TIMEOUT)
     goTo(MODE_ATTEND);
 
@@ -947,7 +933,7 @@ void loop() {
           char dname[NAME_SIZE];
           strncpy(dname, users[deleteTarget].name, NAME_SIZE);
           beepDelete();
-          removeUser(deleteTarget);   // saveUsers() dipanggil di dalam
+          removeUser(deleteTarget);
           deleteTarget = -1;
           wsBroadcastUsers();
           char sub[28]; snprintf(sub, 28, "%s dihapus", dname);
@@ -974,7 +960,6 @@ void loop() {
   String uStr  = uidToStr(uid, uidSz);
   Serial.printf("[RFID] %s\n", uStr.c_str());
 
-  // Attend mode
   if (currentMode == MODE_ATTEND || currentMode == MODE_ATTEND_OK ||
       currentMode == MODE_ATTEND_FAIL) {
     int idx = findUser(uid);
@@ -995,7 +980,6 @@ void loop() {
     rfid.PICC_HaltA(); rfid.PCD_StopCrypto1(); return;
   }
 
-  // Admin Register
   if (currentMode == MODE_ADMIN_REGISTER) {
     int idx = findUser(uid);
     if (idx >= 0) {
@@ -1005,7 +989,7 @@ void loop() {
       beepFail(); currentMode = MODE_RESULT_FAIL; lastAction = now;
       displayResult(false, "Penuh!", "Max 50 user");
     } else {
-      addUser(uid);   // saveUsers() dipanggil di dalam
+      addUser(uid);
       beepOK();
       wsBroadcastUsers(); wsBroadcastStatus();
       Serial.printf("[REG] %s | %s\n", users[userCount-1].name, uStr.c_str());
@@ -1015,7 +999,6 @@ void loop() {
     rfid.PICC_HaltA(); rfid.PCD_StopCrypto1(); return;
   }
 
-  // Admin Hapus
   if (currentMode == MODE_ADMIN_DELETE) {
     int idx = findUser(uid);
     if (idx >= 0) {
