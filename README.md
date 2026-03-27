@@ -36,7 +36,7 @@ Berikut adalah dokumentasi fisik alat absensi yang sudah dirakit lengkap:
 
 <div align="center">
   <img src="hasil/IMG20260223162005.jpg" width="30%" style="aspect-ratio: 3/4; object-fit: cover; border-radius: 8px;">
-    <img src="hasil/IMG2.jpg" width="30%" style="aspect-ratio: 3/4; object-fit: cover; border-radius: 8px;">
+    <img src="hasil/IMG20260227095741.jpg" width="30%" style="aspect-ratio: 3/4; object-fit: cover; border-radius: 8px;">
 
   <br>
   <em>📐 Foto dalam rasio 3:4 — Tampak depan, samping, dan belakang alat</em>
