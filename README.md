@@ -5,7 +5,6 @@ Sistem absensi digital menggunakan **ESP32 + RFID RC522** dengan tampilan OLED, 
 ---
 
 ## ✨ Fitur Utama
-
 - **Tap kartu = absen** — Respons instan dengan feedback OLED dan buzzer
 - **Dashboard web real-time** — Pantau absensi dari browser via WiFi AP bawaan ESP32
 - **WebSocket** — Data log dan daftar user diperbarui otomatis tanpa refresh
@@ -19,15 +18,38 @@ Sistem absensi digital menggunakan **ESP32 + RFID RC522** dengan tampilan OLED, 
 ---
 
 ## 🛠️ Hardware yang Dibutuhkan
-
-| Komponen         | Keterangan                  |
+| Komponen | Keterangan |
 |------------------|-----------------------------|
-| ESP32            | Dev board apapun            |
-| RFID RC522       | Modul RFID 13.56 MHz        |
-| OLED SH1106 1.3" | Display 128×64, I2C         |
-| Buzzer Aktif     | Feedback suara              |
-| Tombol x2        | Navigasi menu (kiri & kanan)|
-| Kabel jumper     | Penghubung antar komponen   |
+| ESP32 | Dev board apapun |
+| RFID RC522 | Modul RFID 13.56 MHz |
+| OLED SH1106 1.3" | Display 128×64, I2C |
+| Buzzer Aktif | Feedback suara |
+| Tombol x2 | Navigasi menu (kiri & kanan)|
+| Kabel jumper | Penghubung antar komponen |
+
+---
+
+## 📸 Galeri Proyek
+
+### Hasil Jadi Alat
+Berikut adalah dokumentasi fisik alat absensi yang sudah dirakit lengkap:
+
+<div align="center">
+  <img src="link-foto-depan.jpg" width="30%" style="aspect-ratio: 3/4; object-fit: cover; border-radius: 8px;">
+  <img src="link-foto-samping.jpg" width="30%" style="aspect-ratio: 3/4; object-fit: cover; border-radius: 8px;">
+  <img src="link-foto-belakang.jpg" width="30%" style="aspect-ratio: 3/4; object-fit: cover; border-radius: 8px;">
+  <br>
+  <em>📐 Foto dalam rasio 3:4 — Tampak depan, samping, dan belakang alat</em>
+</div>
+
+### 🧊 Model 3D Interaktif
+Desain enclosure dan tata letak komponen dalam bentuk 3D:
+
+| Platform | Link Akses |
+|----------|-----------|
+| 📦 **Download STEP/STL** | [Unduh file 3D](https://cults3d.com/:4075848) |
+
+> 💡 *Model 3D dapat diputar, diperbesar, dan dilihat dari berbagai sudut untuk memudahkan pemahaman layout komponen.*
 
 ---
 
@@ -36,50 +58,48 @@ Sistem absensi digital menggunakan **ESP32 + RFID RC522** dengan tampilan OLED, 
 ### OLED SH1106 (I2C)
 | OLED | ESP32 |
 |------|-------|
-| SDA  | GPIO 21 |
-| SCL  | GPIO 22 |
+| SDA | GPIO 21 |
+| SCL | GPIO 22 |
 
 ### RFID RC522 (SPI)
-| RFID  | ESP32   |
+| RFID | ESP32 |
 |-------|---------|
-| SCK   | GPIO 18 |
-| MOSI  | GPIO 23 |
-| MISO  | GPIO 19 |
-| SS    | GPIO 5  |
-| RST   | GPIO 17 |
+| SCK | GPIO 18 |
+| MOSI | GPIO 23 |
+| MISO | GPIO 19 |
+| SS | GPIO 5 |
+| RST | GPIO 17 |
 
 ### Lainnya
-| Komponen     | ESP32   |
+| Komponen | ESP32 |
 |--------------|---------|
-| Buzzer       | GPIO 25 |
-| Tombol KIRI  | GPIO 14 |
+| Buzzer | GPIO 25 |
+| Tombol KIRI | GPIO 14 |
 | Tombol KANAN | GPIO 12 |
 
 ---
 
 ## 📚 Library yang Dibutuhkan
-
 Install via **Arduino Library Manager**:
 
-| Library         | Author              |
+| Library | Author |
 |-----------------|---------------------|
-| `U8g2`          | oliver              |
-| `MFRC522`       | GithubCommunity     |
-| `WebSockets`    | Markus Sattler      |
-| `ArduinoJson`   | Benoit Blanchon     |
+| `U8g2` | oliver |
+| `MFRC522` | GithubCommunity |
+| `WebSockets` | Markus Sattler |
+| `ArduinoJson` | Benoit Blanchon |
 
 > Library bawaan ESP32 (sudah tersedia): `WiFi`, `WebServer`, `DNSServer`, `LittleFS`
 
 ---
 
 ## 📁 Struktur File
-
 ```
 project_absensi_esp32/
-├── project_absensi_esp32.ino   ← Sketch utama
-├── halaman.h                   ← HTML dashboard (disimpan di PROGMEM)
+├── project_absensi_esp32.ino ← Sketch utama
+├── halaman.h ← HTML dashboard (disimpan di PROGMEM)
 └── data/
-    └── users.json              ← Data user (di-generate otomatis oleh LittleFS)
+    └── users.json ← Data user (di-generate otomatis oleh LittleFS)
 ```
 
 ---
@@ -92,14 +112,13 @@ project_absensi_esp32/
 3. Klik **Upload**
 
 ### 2. Konek ke WiFi ESP32
-| Parameter | Nilai         |
+| Parameter | Nilai |
 |-----------|---------------|
-| SSID      | `AbsensiESP32` |
-| Password  | `12345678`    |
+| SSID | `AbsensiESP32` |
+| Password | `12345678` |
 
 ### 3. Buka Dashboard
 Setelah terkonek, buka browser → otomatis redirect ke **`http://haris.com`**
-
 > Atau akses langsung ke IP ESP32 (biasanya `192.168.4.1`)
 
 ---
@@ -114,12 +133,12 @@ Setelah terkonek, buka browser → otomatis redirect ke **`http://haris.com`**
 ### Mode Admin
 Masuk mode admin: **tahan tombol KIRI selama 2 detik**
 
-| Aksi                  | Tombol               |
+| Aksi | Tombol |
 |-----------------------|----------------------|
-| Scroll menu           | KIRI (tap)           |
-| Pilih menu            | KANAN                |
-| Kembali / Batal       | KIRI (tap)           |
-| Keluar dari admin     | Tahan KIRI 2 detik   |
+| Scroll menu | KIRI (tap) |
+| Pilih menu | KANAN |
+| Kembali / Batal | KIRI (tap) |
+| Keluar dari admin | Tahan KIRI 2 detik |
 
 **Menu Admin:**
 1. **Register Kartu** — Tap kartu baru untuk mendaftarkannya
@@ -135,38 +154,31 @@ Masuk mode admin: **tahan tombol KIRI selama 2 detik**
 ---
 
 ## ⚙️ Konfigurasi
-
 Edit bagian ini di `project_absensi_esp32.ino` sesuai kebutuhan:
 
 ```cpp
-const char* AP_SSID   = "AbsensiESP32";  // Nama WiFi
-const char* AP_PASS   = "12345678";      // Password WiFi
-const char* AP_DOMAIN = "haris.com";     // Domain captive portal
-#define MAX_USERS  50                    // Maksimal user terdaftar
-#define MAX_LOG   200                    // Maksimal entri log di RAM
+const char* AP_SSID = "AbsensiESP32"; // Nama WiFi
+const char* AP_PASS = "12345678"; // Password WiFi
+const char* AP_DOMAIN = "haris.com"; // Domain captive portal
+#define MAX_USERS 50 // Maksimal user terdaftar
+#define MAX_LOG 200 // Maksimal entri log di RAM
 ```
 
 ---
 
 ## 📊 Spesifikasi Teknis
-
-| Fitur               | Detail                              |
+| Fitur | Detail |
 |---------------------|-------------------------------------|
-| Penyimpanan user    | LittleFS (`/users.json`), persisten |
-| Log absensi         | RAM only, maks 200 entri (reset saat restart) |
-| Maks user           | 50 kartu                            |
-| WebSocket port      | 81                                  |
-| HTTP port           | 80                                  |
-| Cooldown scan RFID  | 2 detik (anti-duplikat)             |
+| Penyimpanan user | LittleFS (`/users.json`), persisten |
+| Log absensi | RAM only, maks 200 entri (reset saat restart) |
+| Maks user | 50 kartu |
+| WebSocket port | 81 |
+| HTTP port | 80 |
+| Cooldown scan RFID | 2 detik (anti-duplikat) |
 
 ---
 
 ## 🤝 Kontribusi
-
 Pull request dan saran perbaikan sangat diterima! Silakan fork repo ini dan kirimkan PR.
 
 ---
-
-## 📄 Lisensi
-
-Proyek ini bersifat open-source untuk keperluan edukasi dan non-komersial.
