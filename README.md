@@ -35,9 +35,9 @@ Sistem absensi digital menggunakan **ESP32 + RFID RC522** dengan tampilan OLED, 
 Berikut adalah dokumentasi fisik alat absensi yang sudah dirakit lengkap:
 
 <div align="center">
-  <img src="link-foto-depan.jpg" width="30%" style="aspect-ratio: 3/4; object-fit: cover; border-radius: 8px;">
-  <img src="link-foto-samping.jpg" width="30%" style="aspect-ratio: 3/4; object-fit: cover; border-radius: 8px;">
-  <img src="link-foto-belakang.jpg" width="30%" style="aspect-ratio: 3/4; object-fit: cover; border-radius: 8px;">
+  <img src="hasil/IMG1.jpg" width="30%" style="aspect-ratio: 3/4; object-fit: cover; border-radius: 8px;">
+    <img src="hasil/IMG2.jpg" width="30%" style="aspect-ratio: 3/4; object-fit: cover; border-radius: 8px;">
+
   <br>
   <em>📐 Foto dalam rasio 3:4 — Tampak depan, samping, dan belakang alat</em>
 </div>
