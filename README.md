@@ -47,7 +47,7 @@ Desain enclosure dan tata letak komponen dalam bentuk 3D:
 
 | Platform | Link Akses |
 |----------|-----------|
-| 📦 **Download STEP/STL** | [Unduh file 3D](https://cults3d.com/:4075848) |
+| 📦 **Download STL** | [Unduh file 3D](https://cults3d.com/:4075848) |
 
 > 💡 *Model 3D dapat diputar, diperbesar, dan dilihat dari berbagai sudut untuk memudahkan pemahaman layout komponen.*
 
